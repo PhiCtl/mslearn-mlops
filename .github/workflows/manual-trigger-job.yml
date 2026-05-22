@@ -5,6 +5,9 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'src/train-model-parameters.py'
+      - 'src/job.yml'
 
 jobs:
   train:
