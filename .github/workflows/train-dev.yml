@@ -1,7 +1,6 @@
 name: Train model in dev
 
 on:
- workflow_dispatch:
  pull_request:
    branches:
      - main

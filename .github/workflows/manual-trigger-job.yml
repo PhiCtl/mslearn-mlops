@@ -12,6 +12,7 @@ on:
 jobs:
   train:
     runs-on: ubuntu-latest
+    environment: dev
     steps:
     - name: Check out repo
       uses: actions/checkout@main
