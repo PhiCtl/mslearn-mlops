@@ -80,7 +80,7 @@ def eval_model(model, X_test, y_test):
     plt.ylabel('True Positive Rate')
     plt.title('ROC Curve')
     plt.savefig("ROC-Curve.png")
-    mlflow.log_artifact("ROC-Curve.png")    
+    mlflow.log_artifact("ROC-Curve.png")
 
 def parse_args():
     # setup arg parser
@@ -111,5 +111,5 @@ if __name__ == "__main__":
     main(args)
 
     # add space in logs
-    print("*" * 60)
+    print("*" * 50)
     print("\n\n")
