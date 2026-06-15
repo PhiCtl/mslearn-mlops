@@ -34,9 +34,9 @@ jobs:
       - name: Detect Azure ML workspace
         id: detect
         run: |
-          RG_NAME=$(az group list --query "[?starts_with(name,'rg-ai300-l')].name | [0]" -o tsv)
+          RG_NAME=$(az group list --query "[?starts_with(name,'rg-azure-certif-test')].name | [0]" -o tsv)
           if [ -z "$RG_NAME" ]; then
-            echo "No resource group starting with rg-ai300-l found." >&2
+            echo "No resource group starting with rg-azure-certif-test found." >&2
             exit 1
           fi
 
