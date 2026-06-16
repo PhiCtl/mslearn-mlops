@@ -6,7 +6,7 @@ command: >-
   --reg_rate ${{inputs.reg_rate}}
 inputs:
   training_data:
-    type: uri_file
+    type: uri_folder
     path: azureml:diabetes-data@latest
   reg_rate:
     type: number
