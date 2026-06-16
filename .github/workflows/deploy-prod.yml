@@ -55,11 +55,27 @@ jobs:
             exit 1
           fi
 
+          REGISTRY_NAME=$(az ml registry list --resource-group "$RG_NAME" --query "[0].name" -o tsv)
+          if [ -z "$REGISTRY_NAME" ]; then
+            echo "No registry found in $RG_NAME." >&2
+            exit 1
+          fi
+
           SUBSCRIPTION_ID=$(az account show --query id -o tsv)
 
           echo "resource_group=$RG_NAME" >> "$GITHUB_OUTPUT"
           echo "workspace=$WS_NAME" >> "$GITHUB_OUTPUT"
+          echo "registry=$REGISTRY_NAME" >> "$GITHUB_OUTPUT"
           echo "subscription_id=$SUBSCRIPTION_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Get latest model version
+        id: model-version
+        run: |
+          LATEST_VERSION=$(az ml model list \
+            --name diabetes-classifier \
+            --registry-name "${{ steps.detect.outputs.registry }}" \
+            --query "[0].version" -o tsv)
+          echo "latest_version=$LATEST_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Deploy model to managed online endpoint
         id: deploy
@@ -68,6 +84,8 @@ jobs:
             --subscription-id "${{ steps.detect.outputs.subscription_id }}" \
             --resource-group "${{ steps.detect.outputs.resource_group }}" \
             --workspace "${{ steps.detect.outputs.workspace }}" \
+            --registry "${{ steps.detect.outputs.registry }}" \
+            --model-version "${{ steps.model-version.outputs.latest_version }}" \
             --endpoint-name "diabetes-endpoint" \
             --deployment-name "blue"
 

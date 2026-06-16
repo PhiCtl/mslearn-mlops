@@ -45,10 +45,17 @@ jobs:
             exit 1
           fi
 
+          REGISTRY_NAME=$(az ml registry list --resource-group "$RG_NAME" --query "[0].name" -o tsv)
+          if [ -z "$REGISTRY_NAME" ]; then
+            echo "No registry found in $RG_NAME." >&2
+            exit 1
+          fi
+
           az configure --defaults group="$RG_NAME" workspace="$WS_NAME"
 
           echo "resource_group=$RG_NAME" >> "$GITHUB_OUTPUT"
           echo "workspace=$WS_NAME" >> "$GITHUB_OUTPUT"
+          echo "registry=$REGISTRY_NAME" >> "$GITHUB_OUTPUT"
 
       - name: Run training job in prod and capture logs
         id: train
@@ -77,6 +84,19 @@ jobs:
 
           echo "prod_accuracy=$ACC" >> "$GITHUB_OUTPUT"
           echo "prod_auc=$AUC" >> "$GITHUB_OUTPUT"
+
+      - name: Register model to registry
+        run: |
+          JOB_NAME="diabetes-train-prod-${{ github.run_id }}"
+          MODEL_NAME="diabetes-classifier"
+          
+          echo "Registering model from job $JOB_NAME to registry ${{ steps.detect.outputs.registry }}..."
+          az ml model create \
+            --name "$MODEL_NAME" \
+            --version ${{ github.run_id }} \
+            --path "azureml://jobs/$JOB_NAME/outputs/artifacts/paths/model/" \
+            --type mlflow_model \
+            --registry-name "${{ steps.detect.outputs.registry }}"
 
       - name: Comment prod metrics on pull request
         uses: actions/github-script@v7

@@ -13,6 +13,8 @@ def parse_args():
     parser.add_argument("--subscription-id", dest="subscription_id", required=True)
     parser.add_argument("--resource-group", dest="resource_group", required=True)
     parser.add_argument("--workspace", dest="workspace", required=True)
+    parser.add_argument("--registry", dest="registry", required=True)
+    parser.add_argument("--model-version", dest="model_version", required=True)
     parser.add_argument("--endpoint-name", dest="endpoint_name", default="diabetes-endpoint")
     parser.add_argument("--deployment-name", dest="deployment_name", default="blue")
 
@@ -50,9 +52,12 @@ def create_or_update_deployment(
     ml_client: MLClient,
     endpoint_name: str,
     deployment_name: str,
+    registry_name: str,
+    model_version: str,
 ) -> ManagedOnlineDeployment:
+    model_path = f"azureml://registries/{registry_name}/models/diabetes-classifier/versions/{model_version}"
     model = Model(
-        path="./model",
+        path=model_path,
         type=AssetTypes.MLFLOW_MODEL,
         description="MLflow diabetes classification model",
     )
@@ -93,6 +98,8 @@ def main() -> None:
         ml_client=ml_client,
         endpoint_name=endpoint.name,
         deployment_name=args.deployment_name,
+        registry_name=args.registry,
+        model_version=args.model_version,
     )
     print(f"Deployment state: {deployment.provisioning_state}")
 
