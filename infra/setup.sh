@@ -13,6 +13,7 @@ WORKSPACE_NAME="mlw-ai300-l${suffix}"
 COMPUTE_INSTANCE="ci${suffix}"
 COMPUTE_CLUSTER="aml-cluster"
 
+
 # Register the Azure Machine Learning resource provider in the subscription
 echo "Register the Machine Learning resource provider:"
 az provider register --namespace $RESOURCE_PROVIDER
