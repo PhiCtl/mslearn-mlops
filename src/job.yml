@@ -8,9 +8,7 @@ inputs:
   training_data:
     type: uri_folder
     path: azureml:diabetes-data@latest
-  reg_rate:
-    type: number
-    default: 0.6
+  reg_rate: 0.6
 environment: azureml:AzureML-sklearn-1.0-ubuntu20.04-py38-cpu@latest
 compute: azureml:aml-cluster
 experiment_name: diabetes-training
