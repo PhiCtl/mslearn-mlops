@@ -94,7 +94,7 @@ jobs:
           az ml model create \
             --name "$MODEL_NAME" \
             --version ${{ github.run_id }} \
-            --path "azureml://jobs/$JOB_NAME/outputs/artifacts/paths/model/" \
+            --path "azureml://jobs/$JOB_NAME/outputs/model" \
             --type mlflow_model \
             --registry-name "${{ steps.detect.outputs.registry }}"
 
