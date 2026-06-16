@@ -4,6 +4,7 @@ command: >-
   python train-model-parameters.py
   --training_data ${{inputs.training_data}}
   --reg_rate ${{inputs.reg_rate}}
+inputs:
   training_data:
     type: uri_file
     path: azureml:diabetes-data@latest
