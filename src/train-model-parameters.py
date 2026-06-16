@@ -11,6 +11,9 @@ from sklearn.metrics import roc_curve
 import matplotlib.pyplot as plt
 
 def main(args):
+
+    # Log everything to MLflow
+    mlflow.autolog()
     # read data
     df = get_data(args.training_data)
 
